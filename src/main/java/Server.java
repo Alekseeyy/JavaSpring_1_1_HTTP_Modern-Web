@@ -42,7 +42,13 @@ public class Server {
                 return;
             }
 
-            final var path = parts[1];
+            final var pathAndQuery = parts[1];
+            System.out.println("Параметры:");
+            var parsResultParams = Request.getQueryParams(pathAndQuery);
+            var path = Request.getQueryParam(pathAndQuery);
+            System.out.println(parsResultParams);
+            System.out.println(path);
+
             if (!validPaths.contains(path)) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
