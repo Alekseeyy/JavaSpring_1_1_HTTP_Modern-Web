@@ -8,15 +8,21 @@ import java.util.List;
 import java.util.Map;
 
 public class Request {
+    private String requestPath;
+    private String login;
+    private String password;
 
-    public static Map<String, String> getQueryParams(String url) {
-        final Map<String, String> parameter = new HashMap<>();
-        List<NameValuePair> params;
+    private Map<String, String> parameter = new HashMap<>();
+    private List<NameValuePair> params;
+
+    public Map<String, String> getQueryParams(String url) {
         try {
             params = URLEncodedUtils.parse(new URI(url), "UTF-8");
             for (NameValuePair param : params) {
-                if (param.getName() != null && param.getValue() != null) {
-                    parameter.put(param.getName(), param.getValue());
+                login = param.getName();
+                password = param.getValue();
+                if (login != null && password != null) {
+                    parameter.put(login, password);
                 }
             }
         } catch (URISyntaxException e) {
@@ -25,13 +31,12 @@ public class Request {
         return parameter;
     }
 
-    public static String getQueryParam(String url) {
-        String result;
+    public String getQueryParam(String url) {
         int i = url.indexOf("?");
         if (i == -1) {
             return url;
         }
-        result = url.substring(0, i);
-        return result;
+        requestPath = url.substring(0, i);
+        return requestPath;
     }
 }
