@@ -9,29 +9,39 @@ import java.util.Map;
 
 public class Request {
     private String requestPath;
-    private String login;
-    private String password;
+    private Map<String, String> parameters;
 
-    private Map<String, String> parameter = new HashMap<>();
-    private List<NameValuePair> params;
+    public Request(String path) {
+        this.requestPath = getQueryParam(path);
+        this.parameters = getQueryParams(path);
+    }
 
-    public Map<String, String> getQueryParams(String url) {
+    public String getRequestPath() {
+        return requestPath;
+    }
+
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    private Map<String, String> getQueryParams(String url) {
         try {
-            params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+            parameters = new HashMap<>();
+            List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
             for (NameValuePair param : params) {
-                login = param.getName();
-                password = param.getValue();
+                String login = param.getName();
+                String password = param.getValue();
                 if (login != null && password != null) {
-                    parameter.put(login, password);
+                    parameters.put(login, password);
                 }
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        return parameter;
+        return parameters;
     }
 
-    public String getQueryParam(String url) {
+    private String getQueryParam(String url) {
         int i = url.indexOf("?");
         if (i == -1) {
             return url;

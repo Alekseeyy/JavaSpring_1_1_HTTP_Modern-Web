@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 public class Server {
     final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
     ExecutorService executorService;
-    private final Request request = new Request();
 
     public Server(int poolSize) {
         this.executorService = Executors.newFixedThreadPool(poolSize);
@@ -43,11 +42,10 @@ public class Server {
                 return;
             }
 
-            final var pathAndQuery = parts[1];
-            var parsResultParams = request.getQueryParams(pathAndQuery);
-            var path = request.getQueryParam(pathAndQuery);
-            System.out.println("Путь запроса: " + path);
-            System.out.println("Параметры: " + parsResultParams);
+            final var path = parts[1];
+            final var request = new Request(path);
+            System.out.println("Путь запроса: " + request.getRequestPath());
+            System.out.println("Параметры: " + request.getParameters());
 
             if (!validPaths.contains(path)) {
                 out.write((
