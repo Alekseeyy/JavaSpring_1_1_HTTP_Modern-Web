@@ -10,24 +10,18 @@ import java.util.Map;
 public class Request {
     private String requestPath;
     private Map<String, String> parameters;
+    private String path;
 
     public Request(String path) {
+        this.path = path;
         this.requestPath = getQueryParam(path);
-        this.parameters = getQueryParams(path);
+        this.parameters = getQueryParams();
     }
 
-    public String getRequestPath() {
-        return requestPath;
-    }
-
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
-    private Map<String, String> getQueryParams(String url) {
+    public Map<String, String> getQueryParams() {
         try {
             parameters = new HashMap<>();
-            List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
+            List<NameValuePair> params = URLEncodedUtils.parse(new URI(path), "UTF-8");
             for (NameValuePair param : params) {
                 String login = param.getName();
                 String password = param.getValue();
@@ -41,12 +35,12 @@ public class Request {
         return parameters;
     }
 
-    private String getQueryParam(String url) {
-        int i = url.indexOf("?");
+    public String getQueryParam(String name) {
+        int i = name.indexOf("?");
         if (i == -1) {
-            return url;
+            return name;
         }
-        requestPath = url.substring(0, i);
+        requestPath = name.substring(0, i);
         return requestPath;
     }
 }
