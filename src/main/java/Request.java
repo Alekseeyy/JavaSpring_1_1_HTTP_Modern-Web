@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Request {
-    private String requestPath;
+    private Map<String, String> requestPath;
     private Map<String, String> parameters;
     private String path;
 
@@ -18,7 +18,15 @@ public class Request {
         this.parameters = getQueryParams();
     }
 
-    public Map<String, String> getQueryParams() {
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public Map<String, String> getRequestPath() {
+        return requestPath;
+    }
+
+    private Map<String, String> getQueryParams() {
         try {
             parameters = new HashMap<>();
             List<NameValuePair> params = URLEncodedUtils.parse(new URI(path), "UTF-8");
@@ -35,12 +43,15 @@ public class Request {
         return parameters;
     }
 
-    public String getQueryParam(String name) {
+    private Map<String, String> getQueryParam(String name) {
+        requestPath = new HashMap<>();
         int i = name.indexOf("?");
         if (i == -1) {
-            return name;
+            requestPath.put(name, name);
+            return requestPath;
         }
-        requestPath = name.substring(0, i);
+        String newPath = name.substring(0, i);
+        requestPath.put(newPath, name);
         return requestPath;
     }
 }

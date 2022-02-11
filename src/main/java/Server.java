@@ -44,8 +44,8 @@ public class Server {
 
             final var path = parts[1];
             final var request = new Request(path);
-            System.out.println("Путь запроса: " + request.getQueryParam(path));
-            System.out.println("Параметры: " + request.getQueryParams());
+            System.out.println("Путь запроса: " + request.getRequestPath());
+            System.out.println("Параметры: " + request.getParameters());
 
             if (!validPaths.contains(path)) {
                 out.write((
