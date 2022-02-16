@@ -3,38 +3,49 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Request {
-    private Map<String, String> requestPath;
     private Map<String, String> parameters;
     private String path;
+    private String url;
 
-    public Request(String path) {
-        this.path = path;
-        this.requestPath = getQueryParam(path);
-        this.parameters = getQueryParams();
+    public Request(String url) {
+        this.url = url;
+        this.path = queryPath();
+        this.parameters = queryParams();
     }
 
-    public Map<String, String> getParameters() {
+    public Map<String, String> getQueryParams() {
         return parameters;
     }
 
-    public Map<String, String> getRequestPath() {
-        return requestPath;
+    public String getQueryPath() {
+        return path;
     }
 
-    private Map<String, String> getQueryParams() {
+    public List<String> getQueryParam(String name) {
+        List<String> parameterValue = new ArrayList<>();
+        if (parameters.containsKey(name)) {
+            parameterValue.add(parameters.get(name));
+        } else {
+            parameterValue.add("Такого параметра нету!!!!!!");
+        }
+        return parameterValue;
+    }
+
+    private Map<String, String> queryParams() {
         try {
             parameters = new HashMap<>();
-            List<NameValuePair> params = URLEncodedUtils.parse(new URI(path), "UTF-8");
+            List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), "UTF-8");
             for (NameValuePair param : params) {
-                String login = param.getName();
-                String password = param.getValue();
-                if (login != null && password != null) {
-                    parameters.put(login, password);
+                String key = param.getName();
+                String value = param.getValue();
+                if (key != null && value != null) {
+                    parameters.put(key, value);
                 }
             }
         } catch (URISyntaxException e) {
@@ -43,15 +54,12 @@ public class Request {
         return parameters;
     }
 
-    private Map<String, String> getQueryParam(String name) {
-        requestPath = new HashMap<>();
-        int i = name.indexOf("?");
+    private String queryPath() {
+        int i = url.indexOf("?");
         if (i == -1) {
-            requestPath.put(name, name);
-            return requestPath;
+            return url;
         }
-        String newPath = name.substring(0, i);
-        requestPath.put(newPath, name);
-        return requestPath;
+        path = url.substring(0, i);
+        return path;
     }
 }
