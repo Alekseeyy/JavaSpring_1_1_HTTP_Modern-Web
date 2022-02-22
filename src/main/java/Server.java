@@ -42,7 +42,14 @@ public class Server {
                 return;
             }
 
-            final var path = parts[1];
+            final var url = parts[1];
+            final var request = new Request(url);
+            var path = request.getQueryPath();
+            System.out.println("Путь запроса: " + path);
+            System.out.println("Параметры:");
+            System.out.println(request.getQueryParams());
+            System.out.println(request.getQueryParam("login"));
+
             if (!validPaths.contains(path)) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
