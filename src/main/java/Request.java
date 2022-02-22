@@ -31,8 +31,6 @@ public class Request {
         List<String> parameterValue = new ArrayList<>();
         if (parameters.containsKey(name)) {
             parameterValue.add(parameters.get(name));
-        } else {
-            parameterValue.add("Такого параметра нету!!!!!!");
         }
         return parameterValue;
     }
